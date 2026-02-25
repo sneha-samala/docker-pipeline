@@ -2,23 +2,21 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "samalasnehasneha/amazon-nginx"
-        DOCKER_TAG   = "latest"
+        DOCKER_IMAGE = "snehasamala/docker-task:latest"
     }
 
     stages {
 
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/sneha-samala/docker-pipeline.git'
+                git branch: 'main',
+                url: 'https://github.com/sneha-samala/docker-pipeline.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
@@ -36,23 +34,20 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                }
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
     }
 
     post {
         always {
-            sh 'docker logout'
+            sh 'docker logout || true'
         }
         success {
-            echo 'Docker image built and pushed successfully 🎉'
+            echo 'Pipeline Success ✅'
         }
         failure {
-            echo 'Pipeline failed ❌'
+            echo 'Pipeline Failed ❌'
         }
     }
 }
-
