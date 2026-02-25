@@ -12,7 +12,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/sneha-samala/docker-task-pipeline.git'
+                git 'https://github.com/sneha-samala/docker-pipeline.git'
             }
         }
 
